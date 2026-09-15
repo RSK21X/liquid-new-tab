@@ -57,6 +57,29 @@ select:focus-visible {
   background: var(--bg);
 }
 
+.app-shell.has-custom-background::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -4;
+  background-image:
+    linear-gradient(rgba(8, 11, 17, 0.3), rgba(8, 11, 17, 0.3)),
+    var(--custom-background-image);
+  background-position: center;
+  background-size: cover;
+  filter: brightness(0.82) saturate(0.86) contrast(1.06);
+}
+
+.app-shell.has-custom-background .ambient-field {
+  background:
+    radial-gradient(ellipse at 48% 50%, var(--ambient-center), transparent 23%),
+    radial-gradient(ellipse at 58% 46%, var(--ambient-center-soft), transparent 18%),
+    radial-gradient(ellipse at 22% 24%, var(--ambient-left), transparent 27%),
+    radial-gradient(circle at 78% 66%, var(--ambient-right), transparent 29%),
+    radial-gradient(circle at 52% 112%, var(--ambient-bottom), transparent 28%),
+    transparent;
+}
+
 .ambient-field,
 .pointer-field {
   position: fixed;
@@ -257,26 +280,26 @@ select:focus-visible {
   opacity: 0.34;
 }
 
+.shortcut-surface {
+  border-radius: 999px;
+}
+
 .shortcut-button {
   position: relative;
   display: grid;
-  width: 46px;
-  height: 46px;
+  width: 100%;
+  height: 100%;
   place-items: center;
   padding: 0;
-  border: 1px solid var(--line-strong);
-  border-radius: 50%;
-  background:
-    linear-gradient(145deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.035)),
-    rgba(255, 255, 255, 0.05);
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.36),
-    0 10px 26px rgba(0, 0, 0, 0.13);
-  backdrop-filter: blur(12px) saturate(140%);
+  border: 0;
+  border-radius: inherit;
+  background: transparent;
+  box-shadow: none;
+  backdrop-filter: none;
+  color: var(--text-soft);
   transition:
     transform 150ms cubic-bezier(0.16, 1, 0.3, 1),
-    border-color var(--motion-fast) ease,
-    background-color var(--motion-fast) ease;
+    color var(--motion-fast) ease;
 }
 
 .shortcut-button svg,
@@ -287,23 +310,24 @@ select:focus-visible {
   display: block;
 }
 
-.shortcut-button:hover,
-.shortcut-button:focus-visible {
+.shortcut-surface.glass-interactive:hover {
   transform: translate(3px, -3px) scale(1.08);
-  border-color: rgba(206, 255, 247, 0.58);
-  background: rgba(255, 255, 255, 0.12);
 }
 
-.orbit-editing .shortcut-button {
+.shortcut-button:hover,
+.shortcut-button:focus-visible {
+  color: var(--accent-strong);
+}
+
+.orbit-editing .shortcut-surface {
   border-style: dashed;
 }
 
 .shortcut-favicon {
-  position: absolute;
-  inset: 0;
-  width: 22px;
-  height: 22px;
-  border-radius: 6px;
+  position: relative;
+  width: 23px;
+  height: 23px;
+  border-radius: 0;
   object-fit: contain;
   opacity: 0;
   transition: opacity var(--motion-fast) ease;
@@ -311,9 +335,10 @@ select:focus-visible {
 
 .favicon-frame {
   position: relative;
-  display: block;
-  width: 25px;
-  height: 25px;
+  display: grid;
+  width: 26px;
+  height: 26px;
+  place-items: center;
 }
 
 .shortcut-favicon-loaded {
@@ -321,12 +346,12 @@ select:focus-visible {
 }
 
 .favicon-fallback {
+  position: absolute;
+  inset: 0;
   display: grid;
-  width: 25px;
-  height: 25px;
   place-items: center;
-  border-radius: 8px;
-  background: rgba(165, 232, 221, 0.14);
+  border-radius: 0;
+  background: transparent;
   color: var(--accent-strong);
   font-size: 13px;
   font-weight: 700;
@@ -456,7 +481,7 @@ select:focus-visible {
   position: relative;
   display: grid;
   height: 100%;
-  grid-template-columns: auto minmax(0, 1fr) auto auto;
+  grid-template-columns: auto minmax(0, 1fr) auto;
   align-items: center;
   column-gap: 8px;
   padding: 0 14px;
@@ -484,43 +509,24 @@ select:focus-visible {
   height: 32px;
   place-items: center;
   border-radius: 10px;
-  background: rgba(165, 232, 221, 0.14);
+  border: 1px solid rgba(237, 255, 252, 0.25);
+  background: transparent;
   color: var(--accent-strong);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.22);
+  backdrop-filter: blur(8px) saturate(120%);
   font-size: 18px;
-  transition: transform var(--motion-fast) ease, background-color var(--motion-fast) ease;
+  transition: transform var(--motion-fast) ease, background-color var(--motion-fast) ease, border-color var(--motion-fast) ease;
 }
 
 .lens-submit:hover {
-  background: rgba(165, 232, 221, 0.24);
+  border-color: rgba(237, 255, 252, 0.48);
+  background: rgba(255, 255, 255, 0.08);
   transform: translateY(-1px);
-}
-
-.lens-close {
-  display: grid;
-  width: 28px;
-  height: 28px;
-  place-items: center;
-  border: 1px solid var(--line);
-  border-radius: 9px;
-  background: rgba(255, 255, 255, 0.08);
-  color: var(--text-soft);
-  cursor: pointer;
-  transition: color var(--motion-fast) ease, background-color var(--motion-fast) ease, border-color var(--motion-fast) ease;
-}
-
-.lens-close:hover {
-  border-color: var(--line);
-  background: rgba(255, 255, 255, 0.08);
-  color: var(--text);
-}
-
-.lens-close svg {
-  display: block;
 }
 
 .lens-meta {
   position: absolute;
-  right: 89px;
+  right: 58px;
   bottom: 8px;
   left: 46px;
   display: flex;
@@ -800,6 +806,62 @@ select:focus-visible {
 .settings-row select option {
   background: var(--glass-solid);
   color: var(--text);
+}
+
+.settings-background {
+  display: grid;
+  gap: 12px;
+  padding: 17px 0 2px;
+  border-bottom: 1px solid var(--line);
+}
+
+.settings-background-copy {
+  display: grid;
+  gap: 4px;
+}
+
+.settings-background-copy span {
+  color: var(--text-soft);
+  font-size: 12px;
+}
+
+.settings-background-copy small {
+  color: var(--text-faint);
+  font-size: 10px;
+}
+
+.settings-background-actions {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.background-button,
+.background-clear {
+  display: inline-flex;
+  min-height: 30px;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  padding: 0 10px;
+  color: var(--text-soft);
+  cursor: pointer;
+  font-size: 11px;
+  transition: color var(--motion-fast) ease, border-color var(--motion-fast) ease, background-color var(--motion-fast) ease;
+}
+
+.background-button:hover,
+.background-clear:hover {
+  border-color: var(--line-strong);
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text);
+}
+
+.background-clear {
+  border: 0;
+  background: transparent;
+  color: var(--danger);
 }
 
 .reset-button {

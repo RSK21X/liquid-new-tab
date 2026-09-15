@@ -1,26 +1,28 @@
 import { GlassSurface } from './GlassSurface';
 import { X } from 'lucide';
 import { MorphIcon } from 'morphicons/react';
-import { GlassIntensity, SearchEngine, ThemeMode, SEARCH_ENGINE_LABELS } from '../types';
+import { GlassIntensity, SearchEngine, SEARCH_ENGINE_LABELS } from '../types';
 
 interface SettingsPanelProps {
-  theme: ThemeMode;
   searchEngine: SearchEngine;
   glassIntensity: GlassIntensity;
-  onThemeChange: (theme: ThemeMode) => void;
   onSearchEngineChange: (engine: SearchEngine) => void;
   onGlassIntensityChange: (intensity: GlassIntensity) => void;
+  backgroundImage: string | null;
+  onBackgroundChange: (file: File) => void;
+  onBackgroundClear: () => void;
   onReset: () => void;
   onClose: () => void;
 }
 
 export function SettingsPanel({
-  theme,
   searchEngine,
   glassIntensity,
-  onThemeChange,
   onSearchEngineChange,
   onGlassIntensityChange,
+  backgroundImage,
+  onBackgroundChange,
+  onBackgroundClear,
   onReset,
   onClose,
 }: SettingsPanelProps) {
@@ -56,19 +58,6 @@ export function SettingsPanel({
         </div>
 
         <div className="settings-row">
-          <label htmlFor="settings-theme">Appearance</label>
-          <select
-            id="settings-theme"
-            value={theme}
-            onChange={(event) => onThemeChange(event.target.value as ThemeMode)}
-          >
-            <option value="system">System</option>
-            <option value="dark">Dark</option>
-            <option value="light">Light</option>
-          </select>
-        </div>
-
-        <div className="settings-row">
           <label htmlFor="settings-glass">Glass intensity</label>
           <select
             id="settings-glass"
@@ -79,6 +68,32 @@ export function SettingsPanel({
             <option value="normal">Normal</option>
             <option value="high">High</option>
           </select>
+        </div>
+
+        <div className="settings-background">
+          <div className="settings-background-copy">
+            <span>Background</span>
+            <small>{backgroundImage ? 'Custom image active' : 'Dark glass field'}</small>
+          </div>
+          <div className="settings-background-actions">
+            <label className="background-button" htmlFor="background-image">Choose image</label>
+            {backgroundImage && (
+              <button className="background-clear" type="button" onClick={onBackgroundClear}>
+                Remove
+              </button>
+            )}
+          </div>
+          <input
+            className="sr-only"
+            id="background-image"
+            type="file"
+            accept="image/*"
+            onChange={(event) => {
+              const file = event.target.files?.[0];
+              if (file) onBackgroundChange(file);
+              event.currentTarget.value = '';
+            }}
+          />
         </div>
 
         <button className="reset-button" type="button" onClick={onReset}>

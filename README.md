@@ -8,7 +8,7 @@ The interface follows the PRD's three-state model:
 - Search: the lens expands in place and handles search, URL navigation, `@g`, `@yt`, `@gh`, and `>` commands.
 - Edit: shortcuts can be added, removed, dragged between slots, or reordered with the keyboard.
 
-All preferences and shortcuts are stored locally. The extension requests only the `storage` permission and makes no startup network request. Favicon requests begin only after a user adds a shortcut.
+All preferences and shortcuts are stored locally. The extension requests only the `storage` permission. Brand icon requests are limited to known brands rendered in the shortcut orbit.
 
 ## Local development
 
@@ -27,6 +27,6 @@ Load the generated `dist/` directory from `chrome://extensions` with Developer m
 
 ## Design notes
 
-The Liquid Glass effect is an explicitly labeled web approximation built from layered CSS surfaces. It keeps full glass treatment on the search lens and settings surface, while shortcut nodes use a cheaper blur and border treatment. The page uses a single cool-aqua accent, system fonts, CSS pointer illumination, and a reduced-motion fallback.
+The Liquid Glass effect is an explicitly labeled web approximation built from the TonniTools layered CSS material. The search lens, settings surface, and shortcut nodes share the same transparent treatment. The page uses a single cool-aqua accent, a dark-only canvas, Simple Icons SVG brand marks with a Morphicons fallback, local image backgrounds, CSS pointer illumination, and a reduced-motion fallback.
 
 The material structure is adapted from [TonniTools Liquid Glass](https://www.tonnitools.com/liquid-glass/). UI glyphs are rendered with [Morphicons](https://www.morphicons.com/) using the official `MorphIcon` React renderer and icon data from the `lucide` package.

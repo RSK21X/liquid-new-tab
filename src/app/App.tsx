@@ -1,4 +1,4 @@
-import { FormEvent, useEffect, useRef, useState } from 'react';
+import { CSSProperties, FormEvent, useEffect, useRef, useState } from 'react';
 import { Settings, Undo2 } from 'lucide';
 import { MorphIcon } from 'morphicons/react';
 import { GlassSurface } from '../components/GlassSurface';
@@ -11,11 +11,10 @@ import {
   GlassIntensity,
   SearchEngine,
   Shortcut,
-  ThemeMode,
   createDefaultState,
   SEARCH_ENGINE_LABELS,
 } from '../types';
-import { createId, faviconForUrl, getNavigationTarget, looksLikeUrl, normalizeUrl, titleFromUrl } from '../utils';
+import { brandIconForUrl, createId, getNavigationTarget, looksLikeUrl, normalizeUrl, titleFromUrl } from '../utils';
 
 interface RemovedShortcut {
   shortcut: Shortcut;
@@ -52,16 +51,9 @@ export function App() {
 
   useEffect(() => {
     const root = document.documentElement;
-    root.dataset.theme = appState.preferences.theme;
-    const media = window.matchMedia('(prefers-color-scheme: dark)');
-    const updateThemeColor = () => {
-      const dark = appState.preferences.theme === 'dark' || (appState.preferences.theme === 'system' && media.matches);
-      document.querySelector('meta[name="theme-color"]')?.setAttribute('content', dark ? '#080b11' : '#f5f6f5');
-    };
-    updateThemeColor();
-    media.addEventListener('change', updateThemeColor);
-    return () => media.removeEventListener('change', updateThemeColor);
-  }, [appState.preferences.theme]);
+    root.dataset.theme = 'dark';
+    document.querySelector('meta[name="theme-color"]')?.setAttribute('content', '#080b11');
+  }, []);
 
   useEffect(() => {
     const updatePointer = (event: PointerEvent) => {
@@ -133,15 +125,15 @@ export function App() {
   const navigate = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const command = query.trim().slice(1).trim().toLowerCase();
-    if (query.trim().startsWith('>') && ['edit', 'theme', 'settings'].includes(command)) {
-      selectCommand(command as 'edit' | 'theme' | 'settings');
+    if (query.trim().startsWith('>') && ['edit', 'settings'].includes(command)) {
+      selectCommand(command as 'edit' | 'settings');
       return;
     }
     const target = getNavigationTarget(query, appState.preferences.searchEngine);
     if (target) window.location.assign(target);
   };
 
-  const selectCommand = (command: 'edit' | 'theme' | 'settings') => {
+  const selectCommand = (command: 'edit' | 'settings') => {
     if (command === 'edit') {
       setIsEditing(true);
       closeLens();
@@ -149,9 +141,6 @@ export function App() {
     }
     setShowSettings(true);
     closeLens();
-    if (command === 'theme') {
-      setTimeout(() => document.getElementById('settings-theme')?.focus(), 0);
-    }
   };
 
   const addShortcut = (event: FormEvent<HTMLFormElement>) => {
@@ -174,7 +163,7 @@ export function App() {
       id: createId(),
       title: addTitle.trim() || titleFromUrl(normalizedUrl),
       url: normalizedUrl,
-      faviconUrl: faviconForUrl(normalizedUrl),
+      faviconUrl: brandIconForUrl(normalizedUrl),
       position: appState.shortcuts.length,
       createdAt: Date.now(),
     };
@@ -244,6 +233,37 @@ export function App() {
     }));
   };
 
+  const handleBackgroundChange = (file: File) => {
+    if (!file.type.startsWith('image/')) {
+      setStorageNotice('Choose an image file');
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      setStorageNotice('Choose an image under 5 MB');
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.addEventListener('load', () => {
+      if (typeof reader.result !== 'string' || !reader.result.startsWith('data:image/')) {
+        setStorageNotice('That image could not be loaded');
+        return;
+      }
+      setAppState((current) => ({
+        ...current,
+        preferences: { ...current.preferences, backgroundImage: reader.result as string },
+      }));
+      setStorageNotice('Background saved locally');
+    });
+    reader.addEventListener('error', () => setStorageNotice('That image could not be loaded'));
+    reader.readAsDataURL(file);
+  };
+
+  const clearBackground = () => {
+    updatePreference('backgroundImage', null);
+    setStorageNotice('Custom background removed');
+  };
+
   const resetShortcuts = () => {
     if (!window.confirm('Reset all shortcuts?')) return;
     setAppState((current) => ({ ...current, shortcuts: [] }));
@@ -268,9 +288,18 @@ export function App() {
   };
 
   const activeEngineLabel = SEARCH_ENGINE_LABELS[appState.preferences.searchEngine];
+  const customBackgroundStyle = appState.preferences.backgroundImage
+    ? ({
+        '--custom-background-image': `url("${appState.preferences.backgroundImage}")`,
+      } as CSSProperties)
+    : undefined;
+  const backgroundClass = appState.preferences.backgroundImage ? ' has-custom-background' : '';
 
   return (
-    <main className={`app-shell glass-${appState.preferences.glassIntensity}`}>
+    <main
+      className={`app-shell glass-${appState.preferences.glassIntensity}${backgroundClass}`}
+      style={customBackgroundStyle}
+    >
       <div className="ambient-field" aria-hidden="true">
         <span className="ambient-blob ambient-blob-left" />
         <span className="ambient-blob ambient-blob-right" />
@@ -355,12 +384,13 @@ export function App() {
 
       {showSettings && (
         <SettingsPanel
-          theme={appState.preferences.theme}
           searchEngine={appState.preferences.searchEngine}
           glassIntensity={appState.preferences.glassIntensity}
-          onThemeChange={(value: ThemeMode) => updatePreference('theme', value)}
           onSearchEngineChange={(value: SearchEngine) => updatePreference('searchEngine', value)}
           onGlassIntensityChange={(value: GlassIntensity) => updatePreference('glassIntensity', value)}
+          backgroundImage={appState.preferences.backgroundImage}
+          onBackgroundChange={handleBackgroundChange}
+          onBackgroundClear={clearBackground}
           onReset={resetShortcuts}
           onClose={() => setShowSettings(false)}
         />

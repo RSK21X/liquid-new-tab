@@ -13,8 +13,8 @@ interface GlassSurfaceProps {
 }
 
 /**
- * A CSS-only web approximation of the Liquid Glass material described in the PRD.
- * The layers keep the material reusable without moving the glass renderer into JS.
+ * Renders the TonniTools ten-layer liquid glass material with app content above it.
+ * The layer order stays in CSS so every surface shares the same optical treatment.
  */
 export function GlassSurface({
   children,
@@ -25,7 +25,7 @@ export function GlassSurface({
   onMouseDown,
 }: GlassSurfaceProps) {
   const materialStyle = {
-    '--corner-radius': variant === 'lens' || variant === 'tooltip' ? '999px' : '24px',
+    '--corner-radius': variant === 'lens' || variant === 'tooltip' || variant === 'shortcut' ? '999px' : '24px',
   } as CSSProperties;
 
   return (

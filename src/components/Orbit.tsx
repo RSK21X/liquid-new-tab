@@ -1,7 +1,9 @@
 import { DragEvent, KeyboardEvent, useState } from 'react';
-import { Plus, X } from 'lucide';
+import { Globe2, Plus, X } from 'lucide';
 import { MorphIcon } from 'morphicons/react';
+import { GlassSurface } from './GlassSurface';
 import { Shortcut } from '../types';
+import { brandIconForUrl } from '../utils';
 
 const orbitAngles = [-90, -30, 30, 90, 150, 210];
 
@@ -21,20 +23,26 @@ interface OrbitProps {
 function Favicon({ shortcut }: { shortcut: Shortcut }) {
   const [failed, setFailed] = useState(false);
   const [loaded, setLoaded] = useState(false);
-  const fallback = shortcut.title.trim().charAt(0).toUpperCase() || 'W';
+  const iconUrl = brandIconForUrl(shortcut.url);
+  const fallbackIcon = (
+    <span className={`favicon-fallback${loaded ? ' favicon-fallback-hidden' : ''}`}>
+      <MorphIcon icon={Globe2} size={21} strokeWidth={1.55} reducedMotion="user" />
+    </span>
+  );
 
-  if (failed || !shortcut.faviconUrl) {
-    return <span className="favicon-fallback" aria-hidden="true">{fallback}</span>;
+  if (failed || !iconUrl) {
+    return <span className="favicon-frame" aria-hidden="true">{fallbackIcon}</span>;
   }
 
   return (
     <span className="favicon-frame" aria-hidden="true">
-      <span className={`favicon-fallback${loaded ? ' favicon-fallback-hidden' : ''}`}>{fallback}</span>
+      {fallbackIcon}
       <img
         className={`shortcut-favicon${loaded ? ' shortcut-favicon-loaded' : ''}`}
-        src={shortcut.faviconUrl}
+        src={iconUrl}
         alt=""
         loading="lazy"
+        decoding="async"
         onLoad={() => setLoaded(true)}
         onError={() => setFailed(true)}
       />
@@ -131,9 +139,11 @@ export function Orbit({
             key={`empty-${angle}`}
             style={{ '--node-angle': angle } as React.CSSProperties}
           >
-            <button className="shortcut-button placeholder-button" type="button" onClick={onAdd} aria-label="Add shortcut">
-              <MorphIcon icon={Plus} size={19} strokeWidth={1.7} reducedMotion="user" />
-            </button>
+            <GlassSurface className="shortcut-surface" variant="shortcut" intensity="low" interactive>
+              <button className="shortcut-button placeholder-button" type="button" onClick={onAdd} aria-label="Add shortcut">
+                <MorphIcon icon={Plus} size={19} strokeWidth={1.7} reducedMotion="user" />
+              </button>
+            </GlassSurface>
           </div>
         ))}
 
@@ -149,23 +159,25 @@ export function Orbit({
           onMouseEnter={() => setHoveredId(shortcut.id)}
           onMouseLeave={() => setHoveredId(null)}
         >
-          <button
-            className="shortcut-button"
-            type="button"
-            draggable={isEditing}
-            onClick={() => onOpen(shortcut)}
-            onContextMenu={(event) => {
-              event.preventDefault();
-              onEnterEdit();
-            }}
-            onKeyDown={(event) => handleNodeKeyDown(event, index)}
-            onDragStart={(event) => startDrag(event, index)}
-            onDragOver={(event) => event.preventDefault()}
-            onDrop={(event) => dropOnNode(event, index)}
-            aria-label={isEditing ? `${shortcut.title}. Use arrow keys to reorder or Delete to remove.` : shortcut.title}
-          >
-            <Favicon shortcut={shortcut} />
-          </button>
+          <GlassSurface className="shortcut-surface" variant="shortcut" intensity="low" interactive>
+            <button
+              className="shortcut-button"
+              type="button"
+              draggable={isEditing}
+              onClick={() => onOpen(shortcut)}
+              onContextMenu={(event) => {
+                event.preventDefault();
+                onEnterEdit();
+              }}
+              onKeyDown={(event) => handleNodeKeyDown(event, index)}
+              onDragStart={(event) => startDrag(event, index)}
+              onDragOver={(event) => event.preventDefault()}
+              onDrop={(event) => dropOnNode(event, index)}
+              aria-label={isEditing ? `${shortcut.title}. Use arrow keys to reorder or Delete to remove.` : shortcut.title}
+            >
+              <Favicon shortcut={shortcut} />
+            </button>
+          </GlassSurface>
           <span className="shortcut-tooltip" role="status">{shortcut.title}</span>
           {isEditing && (
             <button
@@ -182,9 +194,11 @@ export function Orbit({
 
       {isEditing && shortcuts.length > 0 && shortcuts.length < 18 && (
         <div className="orbit-add-node" style={{ '--node-angle': 180 } as React.CSSProperties}>
-          <button className="shortcut-button add-node-button" type="button" onClick={onAdd} aria-label="Add shortcut">
-            <MorphIcon icon={Plus} size={19} strokeWidth={1.7} reducedMotion="user" />
-          </button>
+          <GlassSurface className="shortcut-surface" variant="shortcut" intensity="low" interactive>
+            <button className="shortcut-button add-node-button" type="button" onClick={onAdd} aria-label="Add shortcut">
+              <MorphIcon icon={Plus} size={19} strokeWidth={1.7} reducedMotion="user" />
+            </button>
+          </GlassSurface>
         </div>
       )}
     </div>

@@ -233,24 +233,6 @@
   --invert: 12%;
 }
 
-/* A light surface still uses the official layer stack, but avoids a colored cast. */
-:root[data-theme='light'] .GlassContainer,
-:root[data-theme='system'] .GlassContainer {
-  --tint-amount: 0.04;
-  --contrast: 1;
-  --brightness: 1;
-  --invert: 0%;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root[data-theme='system'] .GlassContainer {
-    --tint-amount: 0.12;
-    --contrast: 1.05;
-    --brightness: 1.04;
-    --invert: 10%;
-  }
-}
-
 @media (prefers-reduced-transparency: reduce) {
   .GlassContainer {
     --corner-radius: var(--radius-large);

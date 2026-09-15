@@ -1,4 +1,3 @@
-export type ThemeMode = 'system' | 'dark' | 'light';
 export type SearchEngine = 'google' | 'bing' | 'duckduckgo';
 export type GlassIntensity = 'low' | 'normal' | 'high';
 
@@ -12,9 +11,9 @@ export interface Shortcut {
 }
 
 export interface Preferences {
-  theme: ThemeMode;
   searchEngine: SearchEngine;
   glassIntensity: GlassIntensity;
+  backgroundImage: string | null;
 }
 
 export interface AppState {
@@ -27,9 +26,9 @@ export const createDefaultState = (): AppState => ({
   version: 1,
   shortcuts: [],
   preferences: {
-    theme: 'system',
     searchEngine: 'google',
     glassIntensity: 'normal',
+    backgroundImage: null,
   },
 });
 

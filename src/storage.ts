@@ -1,6 +1,7 @@
 import { AppState, Shortcut, createDefaultState } from './types';
 
 const STORAGE_KEY = 'liquid-new-tab-state';
+const MAX_BACKGROUND_DATA_LENGTH = 8_000_000;
 
 type ChromeStorage = {
   get: (keys: string[]) => Promise<Record<string, unknown>>;
@@ -42,10 +43,6 @@ export const sanitizeState = (value: unknown): AppState => {
     version: 1,
     shortcuts: safeShortcuts.map((shortcut, index) => ({ ...shortcut, position: index })),
     preferences: {
-      theme:
-        preferences?.theme === 'dark' || preferences?.theme === 'light'
-          ? preferences.theme
-          : 'system',
       searchEngine:
         preferences?.searchEngine === 'bing' || preferences?.searchEngine === 'duckduckgo'
           ? preferences.searchEngine
@@ -54,6 +51,12 @@ export const sanitizeState = (value: unknown): AppState => {
         preferences?.glassIntensity === 'low' || preferences?.glassIntensity === 'high'
           ? preferences.glassIntensity
           : 'normal',
+      backgroundImage:
+        typeof preferences?.backgroundImage === 'string' &&
+        preferences.backgroundImage.startsWith('data:image/') &&
+        preferences.backgroundImage.length <= MAX_BACKGROUND_DATA_LENGTH
+          ? preferences.backgroundImage
+          : null,
     },
   };
 };

@@ -1,10 +1,9 @@
 interface CommandMenuProps {
-  onSelect: (command: 'edit' | 'theme' | 'settings') => void;
+  onSelect: (command: 'edit' | 'settings') => void;
 }
 
 const commands = [
   { id: 'edit' as const, label: 'Edit shortcuts', hint: 'Manage your orbit' },
-  { id: 'theme' as const, label: 'Change appearance', hint: 'System, dark, or light' },
   { id: 'settings' as const, label: 'Settings', hint: 'Search and glass' },
 ];
 

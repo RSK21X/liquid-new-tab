@@ -22,7 +22,7 @@ interface SearchLensProps {
   onAddTitleChange: (value: string) => void;
   onAdd: (event: FormEvent<HTMLFormElement>) => void;
   onClose: () => void;
-  onOpenCommand: (command: 'edit' | 'theme' | 'settings') => void;
+  onOpenCommand: (command: 'edit' | 'settings') => void;
   onPointerMove: (x: number, y: number) => void;
 }
 
@@ -45,10 +45,22 @@ export function SearchLens({
   onPointerMove,
 }: SearchLensProps) {
   const inputRef = useRef<HTMLInputElement>(null);
+  const lensRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (mode !== 'rest') inputRef.current?.focus();
   }, [mode]);
+
+  useEffect(() => {
+    if (mode !== 'search') return;
+
+    const handleOutsidePointer = (event: PointerEvent) => {
+      if (!lensRef.current?.contains(event.target as Node)) onClose();
+    };
+
+    document.addEventListener('pointerdown', handleOutsidePointer);
+    return () => document.removeEventListener('pointerdown', handleOutsidePointer);
+  }, [mode, onClose]);
 
   const updateHighlight = (event: React.PointerEvent<HTMLDivElement>) => {
     const bounds = event.currentTarget.getBoundingClientRect();
@@ -59,7 +71,7 @@ export function SearchLens({
   };
 
   return (
-    <div className={`lens-wrap lens-${mode}`} onPointerMove={updateHighlight}>
+    <div ref={lensRef} className={`lens-wrap lens-${mode}`} onPointerMove={updateHighlight}>
       <GlassSurface
         className="lens-surface"
         variant={mode === 'add' ? 'menu' : 'lens'}
@@ -101,9 +113,6 @@ export function SearchLens({
               autoComplete="off"
               spellCheck={false}
             />
-            <button className="lens-close" type="button" onClick={onClose} aria-label="Close search">
-              <MorphIcon icon={X} size={16} strokeWidth={1.8} reducedMotion="user" />
-            </button>
             <button className="lens-submit" type="submit" aria-label="Search or navigate">
               <MorphIcon icon={ArrowRight} size={17} strokeWidth={1.8} reducedMotion="user" />
             </button>
