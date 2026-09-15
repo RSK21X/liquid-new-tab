@@ -57,23 +57,26 @@ select:focus-visible {
   background: var(--bg);
 }
 
-.app-shell.has-custom-background {
-  background-image:
-    linear-gradient(rgba(8, 11, 17, 0.38), rgba(8, 11, 17, 0.38)),
-    var(--custom-background-image);
-  background-position: center;
-  background-size: cover;
-  background-repeat: no-repeat;
+.custom-background-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  background: var(--bg);
+  pointer-events: none;
 }
 
-.app-shell.has-custom-background .ambient-field {
-  background:
-    radial-gradient(ellipse at 48% 50%, var(--ambient-center), transparent 23%),
-    radial-gradient(ellipse at 58% 46%, var(--ambient-center-soft), transparent 18%),
-    radial-gradient(ellipse at 22% 24%, var(--ambient-left), transparent 27%),
-    radial-gradient(circle at 78% 66%, var(--ambient-right), transparent 29%),
-    radial-gradient(circle at 52% 112%, var(--ambient-bottom), transparent 28%),
-    transparent;
+.custom-background-layer img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.custom-background-layer img {
+  display: block;
+  object-fit: cover;
+  filter: brightness(0.94) saturate(0.98) contrast(1.02);
 }
 
 .ambient-field,
@@ -180,6 +183,7 @@ select:focus-visible {
 
 .scene {
   position: relative;
+  z-index: 1;
   display: grid;
   min-height: 100dvh;
   place-items: center;

@@ -1,4 +1,4 @@
-import { CSSProperties, FormEvent, useEffect, useRef, useState } from 'react';
+import { FormEvent, useEffect, useRef, useState } from 'react';
 import { Settings, Undo2 } from 'lucide';
 import { MorphIcon } from 'morphicons/react';
 import { GlassSurface } from '../components/GlassSurface';
@@ -288,18 +288,13 @@ export function App() {
   };
 
   const activeEngineLabel = SEARCH_ENGINE_LABELS[appState.preferences.searchEngine];
-  const customBackgroundStyle = appState.preferences.backgroundImage
-    ? ({
-        '--custom-background-image': `url("${appState.preferences.backgroundImage}")`,
-      } as CSSProperties)
-    : undefined;
-  const backgroundClass = appState.preferences.backgroundImage ? ' has-custom-background' : '';
-
   return (
-    <main
-      className={`app-shell glass-${appState.preferences.glassIntensity}${backgroundClass}`}
-      style={customBackgroundStyle}
-    >
+    <main className={`app-shell glass-${appState.preferences.glassIntensity}`}>
+      {appState.preferences.backgroundImage && (
+        <div className="custom-background-layer" aria-hidden="true">
+          <img src={appState.preferences.backgroundImage} alt="" draggable={false} />
+        </div>
+      )}
       <div className="ambient-field" aria-hidden="true">
         <span className="ambient-blob ambient-blob-left" />
         <span className="ambient-blob ambient-blob-right" />
