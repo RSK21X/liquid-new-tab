@@ -1,20 +1,20 @@
 /*
   TonniTools Liquid Glass Generator structure, adapted for this extension.
-  The material remains CSS-only and keeps the generated filter stack intact.
-  The values are tuned through the shared intensity classes below rather than
-  exposing the generator's internal controls as user settings.
+  The material remains CSS-only and keeps the generated layer and mask stack.
+  The surface controls stay neutral so the material does not paint a teal fill
+  over the background. Intensity changes only adjust the amount of blur.
 */
 .GlassContainer {
   --corner-radius: 24px;
   --base-strength: 14px;
   --extra-blur: 2px;
   --softness: 12px;
-  --tint-amount: 0.12;
+  --tint-amount: 0;
   --tint-saturation: 2;
   --tint-hue: 180deg;
-  --contrast: 1.05;
-  --brightness: 1.04;
-  --invert: 10%;
+  --contrast: 1;
+  --brightness: 1;
+  --invert: 0%;
   --total-strength: calc(var(--base-strength) + var(--extra-blur));
   --edge-width: calc(0.3px + (var(--softness) * 0.1));
   --emboss-width: calc((var(--softness) * 0.38));
@@ -72,7 +72,7 @@
   overflow: visible;
   border: var(--total-strength) solid transparent;
   border-radius: calc(var(--corner-radius) + var(--total-strength));
-  backdrop-filter: blur(var(--total-strength)) brightness(1.2) saturate(1.2);
+  backdrop-filter: blur(var(--total-strength));
   mask:
     linear-gradient(white 0 0) padding-box,
     linear-gradient(white 0 0) content-box;
@@ -82,7 +82,7 @@
 .GlassMaterial .GlassEmbossReflection {
   padding: var(--emboss-width);
   border: 0 solid transparent;
-  backdrop-filter: blur(calc(var(--total-strength) * 1.5)) invert(0.25) brightness(1.11) saturate(1.2) hue-rotate(-10deg) contrast(2.3);
+  backdrop-filter: blur(calc(var(--total-strength) * 1.5));
   mask:
     linear-gradient(white 0 0) padding-box,
     linear-gradient(white 0 0) content-box;
@@ -92,7 +92,7 @@
 .GlassMaterial .GlassRefraction {
   padding: var(--refraction-width);
   border: var(--emboss-width) solid transparent;
-  backdrop-filter: invert(0.1) brightness(1.2) contrast(1.5);
+  backdrop-filter: blur(var(--refraction-width));
   mask:
     linear-gradient(white 0 0) padding-box,
     linear-gradient(white 0 0) content-box;
@@ -102,7 +102,7 @@
 .GlassMaterial .GlassBlur {
   margin: calc(var(--emboss-width) + var(--refraction-width));
   border-radius: calc(var(--corner-radius) - (var(--emboss-width) + var(--refraction-width)));
-  backdrop-filter: blur(var(--extra-blur)) brightness(1.25);
+  backdrop-filter: blur(var(--extra-blur));
 }
 
 .GlassMaterial .BlendLayers {
@@ -112,7 +112,7 @@
 
 .GlassMaterial .BlendEdge {
   z-index: 8;
-  backdrop-filter: blur(calc(var(--edge-width) * 0.4)) contrast(1.6) saturate(1.5);
+  backdrop-filter: blur(calc(var(--edge-width) * 0.4));
 }
 
 .GlassContainer::before {
@@ -122,7 +122,6 @@
   z-index: 20;
   display: block;
   border-radius: var(--corner-radius);
-  backdrop-filter: invert(var(--invert));
 }
 
 .GlassMaterial::before {
@@ -134,8 +133,7 @@
   padding: 1px;
   border: 0 solid transparent;
   border-radius: var(--corner-radius);
-  background: linear-gradient(155deg, hsla(0, 0%, 100%, 0.15) 0%, hsla(0, 0%, 0%, 0.2) 50%, hsla(0, 0%, 100%, 0.15) 100%);
-  backdrop-filter: invert(0.15) opacity(1);
+  background: transparent;
   mask:
     linear-gradient(white 0 0) padding-box,
     linear-gradient(white 0 0) content-box;
@@ -147,7 +145,6 @@
   padding: 1px;
   border: 0 solid transparent;
   border-radius: var(--corner-radius);
-  backdrop-filter: brightness(1.2) contrast(1.6) saturate(1.2) opacity(1);
   mask:
     linear-gradient(white 0 0) padding-box,
     linear-gradient(white 0 0) content-box;
@@ -156,17 +153,14 @@
 
 .GlassMaterial .Tint {
   z-index: 9;
-  backdrop-filter: sepia(1) saturate(var(--tint-saturation)) hue-rotate(var(--tint-hue)) opacity(var(--tint-amount));
 }
 
 .GlassMaterial .Contrast {
   z-index: 12;
-  backdrop-filter: contrast(var(--contrast));
 }
 
 .GlassMaterial .Brightness {
   z-index: 13;
-  backdrop-filter: brightness(var(--brightness));
 }
 
 .glass-surface {
@@ -203,27 +197,27 @@
   --base-strength: 9px;
   --softness: 8px;
   --extra-blur: 1px;
-  --tint-amount: 0.12;
-  --contrast: 1.05;
-  --brightness: 1.04;
+  --tint-amount: 0;
+  --contrast: 1;
+  --brightness: 1;
 }
 
 .glass-intensity-normal {
   --base-strength: 14px;
   --softness: 12px;
   --extra-blur: 2px;
-  --tint-amount: 0.12;
-  --contrast: 1.05;
-  --brightness: 1.04;
+  --tint-amount: 0;
+  --contrast: 1;
+  --brightness: 1;
 }
 
 .glass-intensity-high {
   --base-strength: 18px;
   --softness: 18px;
   --extra-blur: 4px;
-  --tint-amount: 0.12;
-  --contrast: 1.05;
-  --brightness: 1.04;
+  --tint-amount: 0;
+  --contrast: 1;
+  --brightness: 1;
 }
 
 @media (prefers-reduced-transparency: reduce) {
