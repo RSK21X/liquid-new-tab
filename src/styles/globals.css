@@ -57,27 +57,13 @@ select:focus-visible {
   background: var(--bg);
 }
 
-.app-shell.has-custom-background::before {
-  content: '';
-  position: fixed;
-  inset: 0;
-  z-index: -4;
+.app-shell.has-custom-background {
   background-image:
-    linear-gradient(rgba(8, 11, 17, 0.3), rgba(8, 11, 17, 0.3)),
+    linear-gradient(rgba(8, 11, 17, 0.38), rgba(8, 11, 17, 0.38)),
     var(--custom-background-image);
   background-position: center;
   background-size: cover;
-  filter: brightness(0.82) saturate(0.86) contrast(1.06);
-}
-
-.app-shell.has-custom-background .ambient-field {
-  background:
-    radial-gradient(ellipse at 48% 50%, var(--ambient-center), transparent 23%),
-    radial-gradient(ellipse at 58% 46%, var(--ambient-center-soft), transparent 18%),
-    radial-gradient(ellipse at 22% 24%, var(--ambient-left), transparent 27%),
-    radial-gradient(circle at 78% 66%, var(--ambient-right), transparent 29%),
-    radial-gradient(circle at 52% 112%, var(--ambient-bottom), transparent 28%),
-    transparent;
+  background-repeat: no-repeat;
 }
 
 .ambient-field,
@@ -102,38 +88,6 @@ select:focus-visible {
     radial-gradient(circle at 52% 112%, var(--ambient-bottom), transparent 28%),
     var(--bg);
   animation: ambient-drift 32s ease-in-out infinite alternate;
-}
-
-.ambient-field::before,
-.ambient-field::after {
-  content: '';
-  position: absolute;
-  pointer-events: none;
-  border: 1px solid var(--ambient-arc);
-  border-radius: 50%;
-  filter: blur(0.35px);
-}
-
-.ambient-field::before {
-  width: min(76vw, 980px);
-  height: min(64vw, 720px);
-  top: -44vh;
-  left: -8vw;
-  border-width: 6px;
-  border-color: var(--ambient-ring);
-  box-shadow: 0 0 70px rgba(255, 255, 255, 0.045);
-  transform: rotate(-18deg);
-}
-
-.ambient-field::after {
-  width: min(130vw, 1680px);
-  height: min(44vw, 500px);
-  top: 75vh;
-  left: -21vw;
-  border-width: 9px;
-  border-color: var(--ambient-ribbon);
-  box-shadow: 0 0 90px rgba(255, 0, 140, 0.08);
-  transform: rotate(-12deg);
 }
 
 .ambient-blob {
