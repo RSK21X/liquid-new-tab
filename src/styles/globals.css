@@ -68,11 +68,16 @@ select:focus-visible {
 .ambient-field {
   overflow: hidden;
   background:
+    repeating-conic-gradient(
+      var(--ambient-checker-light) 0% 25%,
+      var(--ambient-checker-dark) 0% 50%
+    ) 50% / 24px 24px,
     radial-gradient(ellipse at 48% 50%, var(--ambient-center), transparent 23%),
     radial-gradient(ellipse at 58% 46%, var(--ambient-center-soft), transparent 18%),
     radial-gradient(ellipse at 22% 24%, var(--ambient-left), transparent 27%),
     radial-gradient(circle at 78% 66%, var(--ambient-right), transparent 29%),
-    radial-gradient(circle at 52% 112%, var(--ambient-bottom), transparent 28%);
+    radial-gradient(circle at 52% 112%, var(--ambient-bottom), transparent 28%),
+    var(--bg);
   animation: ambient-drift 32s ease-in-out infinite alternate;
 }
 
@@ -87,22 +92,48 @@ select:focus-visible {
 }
 
 .ambient-field::before {
-  width: min(74vw, 960px);
-  height: min(74vw, 960px);
-  top: 34vh;
-  left: -18vw;
-  box-shadow: 0 0 70px rgba(165, 232, 221, 0.045);
+  width: min(76vw, 980px);
+  height: min(64vw, 720px);
+  top: -44vh;
+  left: -8vw;
+  border-width: 6px;
+  border-color: var(--ambient-ring);
+  box-shadow: 0 0 70px rgba(255, 255, 255, 0.045);
   transform: rotate(-18deg);
 }
 
 .ambient-field::after {
-  width: min(112vw, 1440px);
-  height: min(38vw, 490px);
-  top: 52vh;
-  right: -10vw;
-  border-color: var(--ambient-arc-soft);
-  box-shadow: 0 0 90px rgba(237, 255, 252, 0.035);
-  transform: rotate(-16deg);
+  width: min(130vw, 1680px);
+  height: min(44vw, 500px);
+  top: 75vh;
+  left: -21vw;
+  border-width: 9px;
+  border-color: var(--ambient-ribbon);
+  box-shadow: 0 0 90px rgba(255, 0, 140, 0.08);
+  transform: rotate(-12deg);
+}
+
+.ambient-blob {
+  position: absolute;
+  display: block;
+  width: min(35vw, 460px);
+  height: min(35vw, 460px);
+  border: 1px solid var(--ambient-arc-soft);
+  border-radius: 50%;
+  filter: blur(18px);
+  opacity: 0.88;
+}
+
+.ambient-blob-left {
+  top: 42%;
+  left: -16%;
+  background: var(--ambient-blob-left);
+}
+
+.ambient-blob-right {
+  top: 12%;
+  right: -13%;
+  background: var(--ambient-blob-right);
 }
 
 .pointer-field {

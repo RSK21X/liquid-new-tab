@@ -56,7 +56,7 @@ export function App() {
     const media = window.matchMedia('(prefers-color-scheme: dark)');
     const updateThemeColor = () => {
       const dark = appState.preferences.theme === 'dark' || (appState.preferences.theme === 'system' && media.matches);
-      document.querySelector('meta[name="theme-color"]')?.setAttribute('content', dark ? '#080b11' : '#eef3f2');
+      document.querySelector('meta[name="theme-color"]')?.setAttribute('content', dark ? '#080b11' : '#f5f6f5');
     };
     updateThemeColor();
     media.addEventListener('change', updateThemeColor);
@@ -271,7 +271,10 @@ export function App() {
 
   return (
     <main className={`app-shell glass-${appState.preferences.glassIntensity}`}>
-      <div className="ambient-field" aria-hidden="true" />
+      <div className="ambient-field" aria-hidden="true">
+        <span className="ambient-blob ambient-blob-left" />
+        <span className="ambient-blob ambient-blob-right" />
+      </div>
       <div className="pointer-field" aria-hidden="true" />
 
       <header className="topbar">
