@@ -7,6 +7,18 @@ import { faviconUrlsForUrl } from '../utils';
 
 const orbitAngles = [-90, -30, 30, 90, 150, 210];
 
+const editAngleForSlot = (slot: number, shortcutCount: number, canAdd: boolean) => {
+  if (shortcutCount <= orbitAngles.length) return orbitAngles[slot] ?? 180;
+  const slotCount = shortcutCount + (canAdd ? 1 : 0);
+  return (slot * (360 / slotCount)) - 90;
+};
+
+const addAngleForShortcuts = (shortcutCount: number) => {
+  if (shortcutCount < orbitAngles.length) return orbitAngles[shortcutCount];
+  if (shortcutCount === orbitAngles.length) return 180;
+  return (shortcutCount * (360 / (shortcutCount + 1))) - 90;
+};
+
 interface OrbitProps {
   shortcuts: Shortcut[];
   isEditing: boolean;
@@ -76,6 +88,7 @@ export function Orbit({
   const [hoveredId, setHoveredId] = useState<string | null>(null);
   const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
   const hasRotation = shortcuts.length > 6;
+  const canAddShortcut = isEditing && shortcuts.length > 0 && shortcuts.length < 18;
   const visibleShortcuts = isEditing
     ? shortcuts.map((shortcut, index) => ({ shortcut, index }))
     : hasRotation
@@ -164,7 +177,7 @@ export function Orbit({
           key={shortcut.id}
           style={{
             '--node-angle': isEditing
-              ? (slot * (360 / Math.max(shortcuts.length, 1))) - 90
+              ? editAngleForSlot(slot, shortcuts.length, canAddShortcut)
               : orbitAngles[slot],
           } as React.CSSProperties}
           onMouseEnter={() => setHoveredId(shortcut.id)}
@@ -203,8 +216,11 @@ export function Orbit({
         </div>
       ))}
 
-      {isEditing && shortcuts.length > 0 && shortcuts.length < 18 && (
-        <div className="orbit-add-node" style={{ '--node-angle': 180 } as React.CSSProperties}>
+      {canAddShortcut && (
+        <div
+          className={`orbit-add-node${shortcuts.length === orbitAngles.length ? ' orbit-add-node-inner' : ''}`}
+          style={{ '--node-angle': addAngleForShortcuts(shortcuts.length) } as React.CSSProperties}
+        >
           <GlassSurface className="shortcut-surface" variant="shortcut" intensity="low" interactive>
             <button className="shortcut-button add-node-button" type="button" onClick={onAdd} aria-label="Add shortcut">
               <MorphIcon icon={Plus} size={19} strokeWidth={1.7} reducedMotion="user" />

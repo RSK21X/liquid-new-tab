@@ -224,6 +224,7 @@ select:focus-visible {
 .orbit-node,
 .orbit-add-node {
   --orbit-turn: 0;
+  --node-radius: var(--orbit-radius);
   --node-scale: 1;
   position: absolute;
   top: 50%;
@@ -231,7 +232,7 @@ select:focus-visible {
   z-index: 1;
   width: 52px;
   height: 52px;
-  transform: translate(-50%, -50%) rotate(calc((var(--node-angle) + var(--orbit-turn)) * 1deg)) translateY(calc(var(--orbit-radius) * -1)) rotate(calc((var(--node-angle) + var(--orbit-turn)) * -1deg)) scale(var(--node-scale));
+  transform: translate(-50%, -50%) rotate(calc((var(--node-angle) + var(--orbit-turn)) * 1deg)) translateY(calc(var(--node-radius) * -1)) rotate(calc((var(--node-angle) + var(--orbit-turn)) * -1deg)) scale(var(--node-scale));
   transition:
     transform 360ms cubic-bezier(0.16, 1, 0.3, 1),
     opacity var(--motion-normal) ease;
@@ -241,6 +242,10 @@ select:focus-visible {
 .orbit-layer.orbit-editing .orbit-node,
 .orbit-layer.orbit-editing .orbit-add-node {
   --orbit-turn: 0;
+}
+
+.orbit-add-node-inner {
+  --node-radius: calc(var(--orbit-radius) - 36px);
 }
 
 .orbit-layer.orbit-searching .orbit-node,
