@@ -1,9 +1,9 @@
-import { DragEvent, KeyboardEvent, useState } from 'react';
+import { DragEvent, KeyboardEvent, useEffect, useState } from 'react';
 import { Globe2, Plus, X } from 'lucide';
 import { MorphIcon } from 'morphicons/react';
 import { GlassSurface } from './GlassSurface';
 import { Shortcut } from '../types';
-import { brandIconForUrl } from '../utils';
+import { faviconUrlsForUrl } from '../utils';
 
 const orbitAngles = [-90, -30, 30, 90, 150, 210];
 
@@ -21,16 +21,23 @@ interface OrbitProps {
 }
 
 function Favicon({ shortcut }: { shortcut: Shortcut }) {
-  const [failed, setFailed] = useState(false);
+  const [sourceIndex, setSourceIndex] = useState(0);
   const [loaded, setLoaded] = useState(false);
-  const iconUrl = brandIconForUrl(shortcut.url);
+  const iconUrls = faviconUrlsForUrl(shortcut.url);
+  const iconUrl = iconUrls[sourceIndex];
+
+  useEffect(() => {
+    setSourceIndex(0);
+    setLoaded(false);
+  }, [shortcut.url]);
+
   const fallbackIcon = (
     <span className={`favicon-fallback${loaded ? ' favicon-fallback-hidden' : ''}`}>
       <MorphIcon icon={Globe2} size={21} strokeWidth={1.55} reducedMotion="user" />
     </span>
   );
 
-  if (failed || !iconUrl) {
+  if (!iconUrl) {
     return <span className="favicon-frame" aria-hidden="true">{fallbackIcon}</span>;
   }
 
@@ -39,12 +46,16 @@ function Favicon({ shortcut }: { shortcut: Shortcut }) {
       {fallbackIcon}
       <img
         className={`shortcut-favicon${loaded ? ' shortcut-favicon-loaded' : ''}`}
+        key={iconUrl}
         src={iconUrl}
         alt=""
         loading="lazy"
         decoding="async"
         onLoad={() => setLoaded(true)}
-        onError={() => setFailed(true)}
+        onError={() => {
+          setLoaded(false);
+          setSourceIndex((current) => current + 1);
+        }}
       />
     </span>
   );

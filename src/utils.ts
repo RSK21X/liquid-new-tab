@@ -50,43 +50,19 @@ export function titleFromUrl(url: string): string {
   }
 }
 
-const simpleIconHosts: Record<string, string> = {
-  'apple.com': 'apple',
-  'amazon.com': 'amazon',
-  'behance.net': 'behance',
-  'discord.com': 'discord',
-  'dribbble.com': 'dribbble',
-  'figma.com': 'figma',
-  'github.com': 'github',
-  'gmail.com': 'gmail',
-  'google.com': 'google',
-  'linkedin.com': 'linkedin',
-  'linear.app': 'linear',
-  'netflix.com': 'netflix',
-  'notion.so': 'notion',
-  'npmjs.com': 'npm',
-  'reddit.com': 'reddit',
-  'slack.com': 'slack',
-  'spotify.com': 'spotify',
-  'telegram.org': 'telegram',
-  'twitch.tv': 'twitch',
-  'twitter.com': 'x',
-  'vercel.com': 'vercel',
-  'wikipedia.org': 'wikipedia',
-  'x.com': 'x',
-  'youtube.com': 'youtube',
-};
-
-export function brandIconForUrl(url: string): string | null {
+export function faviconUrlsForUrl(url: string): string[] {
   try {
-    const hostname = new URL(url).hostname.replace(/^www\./i, '').toLowerCase();
-    const matchedHost = Object.keys(simpleIconHosts).find(
-      (host) => hostname === host || hostname.endsWith(`.${host}`),
-    );
-    const slug = matchedHost ? simpleIconHosts[matchedHost] : null;
-    return slug ? `https://cdn.simpleicons.org/${slug}/e9f1ef` : null;
+    const origin = new URL(url).origin;
+    const paths = [
+      '/favicon.ico',
+      '/favicon.svg',
+      '/favicon.png',
+      '/apple-touch-icon.png',
+      '/apple-touch-icon-precomposed.png',
+    ];
+    return paths.map((path) => new URL(path, origin).toString());
   } catch {
-    return null;
+    return [];
   }
 }
 

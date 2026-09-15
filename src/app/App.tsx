@@ -14,7 +14,7 @@ import {
   createDefaultState,
   SEARCH_ENGINE_LABELS,
 } from '../types';
-import { brandIconForUrl, createId, getNavigationTarget, looksLikeUrl, normalizeUrl, titleFromUrl } from '../utils';
+import { createId, faviconUrlsForUrl, getNavigationTarget, looksLikeUrl, normalizeUrl, titleFromUrl } from '../utils';
 
 interface RemovedShortcut {
   shortcut: Shortcut;
@@ -163,7 +163,7 @@ export function App() {
       id: createId(),
       title: addTitle.trim() || titleFromUrl(normalizedUrl),
       url: normalizedUrl,
-      faviconUrl: brandIconForUrl(normalizedUrl),
+      faviconUrl: faviconUrlsForUrl(normalizedUrl)[0] ?? null,
       position: appState.shortcuts.length,
       createdAt: Date.now(),
     };
