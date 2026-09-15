@@ -26,9 +26,6 @@ export function GlassSurface({
 }: GlassSurfaceProps) {
   const materialStyle = {
     '--corner-radius': variant === 'lens' || variant === 'tooltip' ? '999px' : '24px',
-    '--tint-saturation': '1.55',
-    '--tint-hue': '175deg',
-    '--invert': '8%',
   } as CSSProperties;
 
   return (

@@ -66,11 +66,43 @@ select:focus-visible {
 }
 
 .ambient-field {
+  overflow: hidden;
   background:
-    radial-gradient(circle at 22% 24%, rgba(84, 171, 170, 0.12), transparent 25%),
+    radial-gradient(ellipse at 48% 50%, rgba(118, 222, 210, 0.2), transparent 23%),
+    radial-gradient(ellipse at 58% 46%, rgba(237, 255, 252, 0.06), transparent 18%),
+    radial-gradient(ellipse at 22% 24%, rgba(84, 171, 170, 0.14), transparent 27%),
     radial-gradient(circle at 78% 66%, rgba(82, 118, 176, 0.1), transparent 29%),
     radial-gradient(circle at 52% 112%, rgba(72, 158, 144, 0.07), transparent 28%);
   animation: ambient-drift 32s ease-in-out infinite alternate;
+}
+
+.ambient-field::before,
+.ambient-field::after {
+  content: '';
+  position: absolute;
+  pointer-events: none;
+  border: 1px solid var(--ambient-arc);
+  border-radius: 50%;
+  filter: blur(0.35px);
+}
+
+.ambient-field::before {
+  width: min(74vw, 960px);
+  height: min(74vw, 960px);
+  top: 34vh;
+  left: -18vw;
+  box-shadow: 0 0 70px rgba(165, 232, 221, 0.045);
+  transform: rotate(-18deg);
+}
+
+.ambient-field::after {
+  width: min(112vw, 1440px);
+  height: min(38vw, 490px);
+  top: 52vh;
+  right: -10vw;
+  border-color: var(--ambient-arc-soft);
+  box-shadow: 0 0 90px rgba(237, 255, 252, 0.035);
+  transform: rotate(-16deg);
 }
 
 .pointer-field {
@@ -205,11 +237,10 @@ select:focus-visible {
   border-radius: 50%;
   background:
     linear-gradient(145deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.035)),
-    var(--glass-fill);
+    rgba(255, 255, 255, 0.05);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.36),
     0 10px 26px rgba(0, 0, 0, 0.13);
-  -webkit-backdrop-filter: blur(12px) saturate(140%);
   backdrop-filter: blur(12px) saturate(140%);
   transition:
     transform 150ms cubic-bezier(0.16, 1, 0.3, 1),
@@ -229,7 +260,7 @@ select:focus-visible {
 .shortcut-button:focus-visible {
   transform: translate(3px, -3px) scale(1.08);
   border-color: rgba(206, 255, 247, 0.58);
-  background: var(--glass-fill-strong);
+  background: rgba(255, 255, 255, 0.12);
 }
 
 .orbit-editing .shortcut-button {

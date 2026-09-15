@@ -13,11 +13,11 @@
   --danger: #ffb2a8;
   --glass-fill: rgba(233, 250, 247, 0.095);
   --glass-fill-strong: rgba(233, 250, 247, 0.14);
-  --glass-material-fill: rgba(17, 31, 37, 0.38);
-  --glass-underlay: rgba(7, 17, 21, 0.18);
   --glass-solid: #182129;
   --glass-highlight: rgba(237, 255, 252, 0.45);
   --glass-shadow: rgba(0, 0, 0, 0.3);
+  --ambient-arc: rgba(165, 232, 221, 0.13);
+  --ambient-arc-soft: rgba(237, 255, 252, 0.08);
   --pointer-x: 50vw;
   --pointer-y: 50vh;
   --lens-highlight-x: 50%;
@@ -45,11 +45,11 @@
   --danger: #a33f36;
   --glass-fill: rgba(255, 255, 255, 0.52);
   --glass-fill-strong: rgba(255, 255, 255, 0.7);
-  --glass-material-fill: rgba(248, 255, 253, 0.7);
-  --glass-underlay: rgba(255, 255, 255, 0.24);
   --glass-solid: #f8fbfa;
   --glass-highlight: rgba(255, 255, 255, 0.8);
   --glass-shadow: rgba(23, 55, 52, 0.14);
+  --ambient-arc: rgba(50, 127, 120, 0.16);
+  --ambient-arc-soft: rgba(24, 48, 48, 0.08);
 }
 
 @media (prefers-color-scheme: light) {
@@ -68,10 +68,10 @@
     --danger: #a33f36;
     --glass-fill: rgba(255, 255, 255, 0.52);
     --glass-fill-strong: rgba(255, 255, 255, 0.7);
-    --glass-material-fill: rgba(248, 255, 253, 0.7);
-    --glass-underlay: rgba(255, 255, 255, 0.24);
     --glass-solid: #f8fbfa;
     --glass-highlight: rgba(255, 255, 255, 0.8);
     --glass-shadow: rgba(23, 55, 52, 0.14);
+    --ambient-arc: rgba(50, 127, 120, 0.16);
+    --ambient-arc-soft: rgba(24, 48, 48, 0.08);
   }
 }
