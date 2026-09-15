@@ -66,6 +66,16 @@ select:focus-visible {
   background-repeat: no-repeat;
 }
 
+.app-shell.has-custom-background .ambient-field {
+  background:
+    radial-gradient(ellipse at 48% 50%, var(--ambient-center), transparent 23%),
+    radial-gradient(ellipse at 58% 46%, var(--ambient-center-soft), transparent 18%),
+    radial-gradient(ellipse at 22% 24%, var(--ambient-left), transparent 27%),
+    radial-gradient(circle at 78% 66%, var(--ambient-right), transparent 29%),
+    radial-gradient(circle at 52% 112%, var(--ambient-bottom), transparent 28%),
+    transparent;
+}
+
 .ambient-field,
 .pointer-field {
   position: fixed;
