@@ -101,6 +101,9 @@ export function SearchLens({
               autoComplete="off"
               spellCheck={false}
             />
+            <button className="lens-close" type="button" onClick={onClose} aria-label="Close search">
+              <MorphIcon icon={X} size={16} strokeWidth={1.8} reducedMotion="user" />
+            </button>
             <button className="lens-submit" type="submit" aria-label="Search or navigate">
               <MorphIcon icon={ArrowRight} size={17} strokeWidth={1.8} reducedMotion="user" />
             </button>

@@ -21,26 +21,43 @@
   --refraction-width: calc((var(--softness) * 0.3));
   position: relative;
   overflow: visible;
+  isolation: isolate;
   pointer-events: none;
 }
 
 .GlassContent {
   position: relative;
-  z-index: 100;
+  z-index: 3;
   display: block;
   width: 100%;
   height: 100%;
   overflow: hidden;
   border-radius: var(--corner-radius);
-  background: var(--glass-fill);
+  background: transparent;
   pointer-events: auto;
 }
 
 .GlassMaterial {
   position: absolute;
   inset: 0;
-  z-index: 1;
+  z-index: 2;
   overflow: visible;
+  border-radius: var(--corner-radius);
+  background:
+    radial-gradient(
+      130% 180% at var(--lens-highlight-x, 50%) var(--lens-highlight-y, 0%),
+      rgba(241, 255, 252, 0.24),
+      transparent 36%
+    ),
+    linear-gradient(
+      145deg,
+      rgba(255, 255, 255, 0.18) 0%,
+      rgba(255, 255, 255, 0.055) 38%,
+      rgba(115, 207, 198, 0.1) 100%
+    ),
+    var(--glass-material-fill);
+  backdrop-filter: blur(var(--total-strength)) saturate(175%) contrast(1.08);
+  -webkit-backdrop-filter: blur(var(--total-strength)) saturate(175%) contrast(1.08);
   pointer-events: none;
 }
 
@@ -48,11 +65,14 @@
   content: '';
   position: absolute;
   inset: 0;
-  z-index: 3;
+  z-index: 15;
   display: block;
   overflow: hidden;
   border-radius: var(--corner-radius);
-  background-color: rgba(128, 128, 128, 0);
+  background:
+    linear-gradient(115deg, rgba(255, 255, 255, 0.14), transparent 24% 72%, rgba(153, 239, 229, 0.08)),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.08), transparent 25%);
+  opacity: 0.8;
 }
 
 .GlassMaterial > div {
@@ -124,25 +144,24 @@
   content: '';
   position: absolute;
   inset: 0;
-  z-index: 20;
+  z-index: 1;
   display: block;
   border-radius: var(--corner-radius);
-  backdrop-filter: invert(var(--invert));
-  -webkit-backdrop-filter: invert(var(--invert));
+  background: var(--glass-underlay);
+  backdrop-filter: blur(calc(var(--total-strength) * 0.7)) saturate(145%);
+  -webkit-backdrop-filter: blur(calc(var(--total-strength) * 0.7)) saturate(145%);
 }
 
 .GlassMaterial::before {
   content: '';
   position: absolute;
   inset: 0;
-  z-index: 11;
+  z-index: 14;
   display: block;
   padding: 1px;
   border: 0 solid transparent;
   border-radius: var(--corner-radius);
-  background: linear-gradient(155deg, hsla(0, 0%, 100%, 0.15) 0%, hsla(0, 0%, 0%, 0.2) 50%, hsla(0, 0%, 100%, 0.15) 100%);
-  backdrop-filter: invert(0.15) opacity(1);
-  -webkit-backdrop-filter: invert(0.15) opacity(1);
+  background: linear-gradient(155deg, rgba(255, 255, 255, 0.34) 0%, rgba(255, 255, 255, 0.03) 46%, rgba(120, 228, 217, 0.18) 100%);
   mask:
     linear-gradient(white 0 0) padding-box,
     linear-gradient(white 0 0) content-box;
@@ -184,6 +203,7 @@
   width: 100%;
   height: 100%;
   border: 1px solid var(--line-strong);
+  background: transparent;
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.3),
     0 24px 70px var(--glass-shadow);

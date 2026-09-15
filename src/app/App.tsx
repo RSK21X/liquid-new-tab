@@ -276,7 +276,15 @@ export function App() {
 
       <header className="topbar">
         <span className="product-mark">LIQUID</span>
-        <button className="text-button" type="button" onClick={() => setShowSettings(true)} aria-label="Open settings">
+        <button
+          className="text-button"
+          type="button"
+          onClick={() => {
+            closeLens();
+            setShowSettings(true);
+          }}
+          aria-label="Open settings"
+        >
           <MorphIcon icon={Settings} size={15} strokeWidth={1.8} reducedMotion="user" />
           <span>Settings</span>
         </button>

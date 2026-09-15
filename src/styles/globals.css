@@ -182,8 +182,12 @@ select:focus-visible {
 }
 
 .orbit-layer.orbit-searching .orbit-node,
-.orbit-layer.orbit-searching .orbit-placeholder {
-  opacity: 0.18;
+.orbit-layer.orbit-searching .orbit-placeholder,
+.orbit-layer.orbit-searching .orbit-add-node {
+  --node-scale: 0.72;
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
 }
 
 .orbit-node.node-dimmed {
@@ -390,10 +394,10 @@ select:focus-visible {
   position: relative;
   display: grid;
   height: 100%;
-  grid-template-columns: auto 1fr auto;
+  grid-template-columns: auto minmax(0, 1fr) auto auto;
   align-items: center;
-  column-gap: 10px;
-  padding: 0 16px;
+  column-gap: 8px;
+  padding: 0 14px;
 }
 
 .lens-form input {
@@ -408,7 +412,8 @@ select:focus-visible {
 
 .lens-form input::placeholder,
 .add-form input::placeholder {
-  color: var(--text-faint);
+  color: var(--text-soft);
+  opacity: 0.88;
 }
 
 .lens-submit {
@@ -428,14 +433,37 @@ select:focus-visible {
   transform: translateY(-1px);
 }
 
+.lens-close {
+  display: grid;
+  width: 28px;
+  height: 28px;
+  place-items: center;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text-soft);
+  cursor: pointer;
+  transition: color var(--motion-fast) ease, background-color var(--motion-fast) ease, border-color var(--motion-fast) ease;
+}
+
+.lens-close:hover {
+  border-color: var(--line);
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text);
+}
+
+.lens-close svg {
+  display: block;
+}
+
 .lens-meta {
   position: absolute;
-  right: 17px;
+  right: 89px;
   bottom: 8px;
   left: 46px;
   display: flex;
   justify-content: space-between;
-  color: var(--text-faint);
+  color: var(--text-soft);
   font-size: 10px;
 }
 
@@ -646,20 +674,29 @@ select:focus-visible {
   position: fixed;
   inset: 0;
   z-index: 8;
-  background: rgba(3, 6, 10, 0.28);
+  background: rgba(3, 6, 10, 0.18);
 }
 
-.settings-panel {
+.settings-panel.GlassContainer {
   position: absolute;
-  top: 66px;
+  top: 78px;
   right: 24px;
-  width: min(330px, calc(100vw - 32px));
+  width: min(360px, calc(100vw - 32px));
+  min-width: 0;
   height: auto;
-  padding: 20px;
+  min-height: 0;
+  padding: 0;
   border-radius: var(--radius-large);
 }
 
-.settings-panel .GlassContent,
+.settings-panel.GlassContainer > .GlassContent {
+  width: 100%;
+  height: auto;
+  min-height: 0;
+  overflow: visible;
+  padding: 20px;
+}
+
 .undo-toast .GlassContent {
   height: auto;
 }
