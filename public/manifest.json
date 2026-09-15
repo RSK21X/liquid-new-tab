@@ -1,0 +1,10 @@
+{
+  "manifest_version": 3,
+  "name": "Liquid New Tab",
+  "version": "0.1.0",
+  "description": "A quiet, spatial new tab for search and the websites you use most.",
+  "permissions": ["storage"],
+  "chrome_url_overrides": {
+    "newtab": "newtab.html"
+  }
+}
