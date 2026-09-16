@@ -4,6 +4,7 @@ import { MorphIcon } from 'morphicons/react';
 import { CommandMenu } from './CommandMenu';
 import { GlassSurface } from './GlassSurface';
 import { GlassIntensity, SearchEngine } from '../types';
+import { UiCopy } from '../i18n';
 
 export type LensMode = 'rest' | 'search' | 'add';
 
@@ -15,6 +16,7 @@ interface SearchLensProps {
   addError: string;
   searchEngine: SearchEngine;
   glassIntensity: GlassIntensity;
+  copy: UiCopy;
   onOpenSearch: () => void;
   onQueryChange: (value: string) => void;
   onNavigate: (event: FormEvent<HTMLFormElement>) => void;
@@ -34,6 +36,7 @@ export function SearchLens({
   addError,
   searchEngine,
   glassIntensity,
+  copy,
   onOpenSearch,
   onQueryChange,
   onNavigate,
@@ -83,7 +86,7 @@ export function SearchLens({
             <span className="search-glyph" aria-hidden="true">
               <MorphIcon icon={Search} size={20} strokeWidth={1.8} reducedMotion="user" />
             </span>
-            <span>Search</span>
+            <span>{copy.search}</span>
             <span className="lens-key" aria-hidden="true">
               /
             </span>
@@ -93,7 +96,7 @@ export function SearchLens({
         {mode === 'search' && (
           <form className="lens-form" onSubmit={onNavigate}>
             <label className="sr-only" htmlFor="search-input">
-              Search the web
+              {copy.searchWebLabel}
             </label>
             <span className="search-glyph" aria-hidden="true">
               <MorphIcon icon={Search} size={20} strokeWidth={1.8} reducedMotion="user" />
@@ -109,15 +112,15 @@ export function SearchLens({
                   onClose();
                 }
               }}
-              placeholder="Search anything..."
+              placeholder={copy.searchPlaceholder}
               autoComplete="off"
               spellCheck={false}
             />
-            <button className="lens-submit" type="submit" aria-label="Search or navigate">
+            <button className="lens-submit" type="submit" aria-label={copy.searchOrNavigate}>
               <MorphIcon icon={ArrowRight} size={17} strokeWidth={1.8} reducedMotion="user" />
             </button>
             <div className="lens-meta">
-              <span>{searchEngine === 'duckduckgo' ? 'DuckDuckGo' : searchEngine[0].toUpperCase() + searchEngine.slice(1)}</span>
+              <span>{copy.searchEngineNames[searchEngine]}</span>
               <span>@g &nbsp; @yt &nbsp; @gh</span>
             </div>
           </form>
@@ -126,12 +129,12 @@ export function SearchLens({
         {mode === 'add' && (
           <form className="add-form" onSubmit={onAdd}>
             <div className="add-form-heading">
-              <span className="add-kicker">New shortcut</span>
-              <button type="button" className="icon-button" aria-label="Close add shortcut" onClick={onClose}>
+              <span className="add-kicker">{copy.newShortcut}</span>
+              <button type="button" className="icon-button" aria-label={copy.closeAddShortcut} onClick={onClose}>
                 <MorphIcon icon={X} size={16} strokeWidth={1.8} reducedMotion="user" />
               </button>
             </div>
-            <label htmlFor="shortcut-url">Website URL</label>
+            <label htmlFor="shortcut-url">{copy.websiteUrl}</label>
             <input
               ref={inputRef}
               id="shortcut-url"
@@ -141,22 +144,22 @@ export function SearchLens({
               autoComplete="url"
               spellCheck={false}
             />
-            <label htmlFor="shortcut-title">Name <span>(optional)</span></label>
+            <label htmlFor="shortcut-title">{copy.name} <span>({copy.optional})</span></label>
             <input
               id="shortcut-title"
               value={addTitle}
               onChange={(event) => onAddTitleChange(event.target.value)}
-              placeholder="Example"
+              placeholder={copy.namePlaceholder}
               autoComplete="off"
             />
             {addError && <p className="form-error" role="alert">{addError}</p>}
             <button className="add-submit" type="submit">
-              Add shortcut
+              {copy.addShortcutSubmit}
             </button>
           </form>
         )}
       </GlassSurface>
-      {mode === 'search' && query.trim().startsWith('>') && <CommandMenu onSelect={onOpenCommand} />}
+      {mode === 'search' && query.trim().startsWith('>') && <CommandMenu copy={copy} onSelect={onOpenCommand} />}
     </div>
   );
 }

@@ -1,15 +1,18 @@
+import { UiCopy } from '../i18n';
+
 interface CommandMenuProps {
+  copy: UiCopy;
   onSelect: (command: 'edit' | 'settings') => void;
 }
 
-const commands = [
-  { id: 'edit' as const, label: 'Edit shortcuts', hint: 'Manage your orbit' },
-  { id: 'settings' as const, label: 'Settings', hint: 'Search and glass' },
-];
+export function CommandMenu({ copy, onSelect }: CommandMenuProps) {
+  const commands = [
+    { id: 'edit' as const, label: copy.editShortcuts, hint: copy.manageOrbit },
+    { id: 'settings' as const, label: copy.settings, hint: copy.searchAndGlass },
+  ];
 
-export function CommandMenu({ onSelect }: CommandMenuProps) {
   return (
-    <div className="command-menu" aria-label="Commands">
+    <div className="command-menu" aria-label={copy.commands}>
       {commands.map((command) => (
         <button
           className="command-row"

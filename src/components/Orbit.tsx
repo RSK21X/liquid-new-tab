@@ -4,6 +4,7 @@ import { MorphIcon } from 'morphicons/react';
 import { GlassSurface } from './GlassSurface';
 import { Shortcut } from '../types';
 import { faviconUrlsForUrl } from '../utils';
+import { UiCopy } from '../i18n';
 
 const orbitAngles = [-90, -30, 30, 90, 150, 210];
 
@@ -20,6 +21,7 @@ const addAngleForShortcuts = (shortcutCount: number) => {
 };
 
 interface OrbitProps {
+  copy: UiCopy;
   shortcuts: Shortcut[];
   isEditing: boolean;
   isSearching: boolean;
@@ -74,6 +76,7 @@ function Favicon({ shortcut }: { shortcut: Shortcut }) {
 }
 
 export function Orbit({
+  copy,
   shortcuts,
   isEditing,
   isSearching,
@@ -154,7 +157,7 @@ export function Orbit({
       onWheel={handleWheel}
       onKeyDown={handleOrbitKeyDown}
       tabIndex={hasRotation && !isEditing ? 0 : -1}
-      aria-label="Shortcut orbit"
+      aria-label={copy.shortcutOrbit}
     >
       {shortcuts.length === 0 &&
         orbitAngles.slice(0, 4).map((angle, index) => (
@@ -164,7 +167,7 @@ export function Orbit({
             style={{ '--node-angle': angle } as React.CSSProperties}
           >
             <GlassSurface className="shortcut-surface" variant="shortcut" intensity="low" interactive>
-              <button className="shortcut-button placeholder-button" type="button" onClick={onAdd} aria-label="Add shortcut">
+              <button className="shortcut-button placeholder-button" type="button" onClick={onAdd} aria-label={copy.addShortcut}>
                 <MorphIcon icon={Plus} size={19} strokeWidth={1.7} reducedMotion="user" />
               </button>
             </GlassSurface>
@@ -197,7 +200,7 @@ export function Orbit({
               onDragStart={(event) => startDrag(event, index)}
               onDragOver={(event) => event.preventDefault()}
               onDrop={(event) => dropOnNode(event, index)}
-              aria-label={isEditing ? `${shortcut.title}. Use arrow keys to reorder or Delete to remove.` : shortcut.title}
+              aria-label={isEditing ? copy.editShortcutAria(shortcut.title) : shortcut.title}
             >
               <Favicon shortcut={shortcut} />
             </button>
@@ -207,7 +210,7 @@ export function Orbit({
             <button
               className="shortcut-delete"
               type="button"
-              aria-label={`Delete ${shortcut.title}`}
+              aria-label={copy.deleteShortcutAria(shortcut.title)}
               onClick={() => onDelete(index)}
             >
               <MorphIcon icon={X} size={13} strokeWidth={1.8} reducedMotion="user" />
@@ -222,7 +225,7 @@ export function Orbit({
           style={{ '--node-angle': addAngleForShortcuts(shortcuts.length) } as React.CSSProperties}
         >
           <GlassSurface className="shortcut-surface" variant="shortcut" intensity="low" interactive>
-            <button className="shortcut-button add-node-button" type="button" onClick={onAdd} aria-label="Add shortcut">
+            <button className="shortcut-button add-node-button" type="button" onClick={onAdd} aria-label={copy.addShortcut}>
               <MorphIcon icon={Plus} size={19} strokeWidth={1.7} reducedMotion="user" />
             </button>
           </GlassSurface>

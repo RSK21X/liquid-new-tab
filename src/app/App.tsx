@@ -9,12 +9,13 @@ import { loadAppState, saveAppState } from '../storage';
 import {
   AppState,
   GlassIntensity,
+  Language,
   SearchEngine,
   Shortcut,
   createDefaultState,
-  SEARCH_ENGINE_LABELS,
 } from '../types';
 import { createId, faviconUrlsForUrl, getNavigationTarget, looksLikeUrl, normalizeUrl, titleFromUrl } from '../utils';
+import { getCopy } from '../i18n';
 
 interface RemovedShortcut {
   shortcut: Shortcut;
@@ -35,25 +36,30 @@ export function App() {
   const [removedShortcut, setRemovedShortcut] = useState<RemovedShortcut | null>(null);
   const [storageNotice, setStorageNotice] = useState<string | null>(null);
   const removeTimer = useRef<number | null>(null);
+  const copy = getCopy(appState.preferences.language);
 
   useEffect(() => {
     loadAppState().then(({ state, usedFallback }) => {
       setAppState(state);
-      setStorageNotice(usedFallback ? 'Local defaults loaded' : null);
+      setStorageNotice(usedFallback ? getCopy(state.preferences.language).localDefaultsLoaded : null);
       setIsLoaded(true);
     });
   }, []);
 
   useEffect(() => {
     if (!isLoaded) return;
-    saveAppState(appState).catch(() => setStorageNotice('Changes stay in this tab only'));
-  }, [appState, isLoaded]);
+    saveAppState(appState).catch(() => setStorageNotice(copy.changesStayInTab));
+  }, [appState, copy.changesStayInTab, isLoaded]);
 
   useEffect(() => {
     const root = document.documentElement;
     root.dataset.theme = 'dark';
     document.querySelector('meta[name="theme-color"]')?.setAttribute('content', '#080b11');
   }, []);
+
+  useEffect(() => {
+    document.documentElement.lang = appState.preferences.language === 'zh' ? 'zh-CN' : 'en';
+  }, [appState.preferences.language]);
 
   useEffect(() => {
     const updatePointer = (event: PointerEvent) => {
@@ -147,15 +153,15 @@ export function App() {
     event.preventDefault();
     const normalizedUrl = normalizeUrl(addUrl);
     if (!normalizedUrl || !looksLikeUrl(addUrl)) {
-      setAddError("That URL doesn't look right.");
+      setAddError(copy.invalidUrl);
       return;
     }
     if (appState.shortcuts.length >= 18) {
-      setAddError('Your orbit is full. Remove one shortcut first.');
+      setAddError(copy.orbitFull);
       return;
     }
     if (appState.shortcuts.some((shortcut) => shortcut.url === normalizedUrl)) {
-      setAddError('That shortcut is already here.');
+      setAddError(copy.duplicateShortcut);
       return;
     }
 
@@ -235,37 +241,37 @@ export function App() {
 
   const handleBackgroundChange = (file: File) => {
     if (!file.type.startsWith('image/')) {
-      setStorageNotice('Choose an image file');
+      setStorageNotice(copy.chooseImageFile);
       return;
     }
     if (file.size > 5 * 1024 * 1024) {
-      setStorageNotice('Choose an image under 5 MB');
+      setStorageNotice(copy.imageTooLarge);
       return;
     }
 
     const reader = new FileReader();
     reader.addEventListener('load', () => {
       if (typeof reader.result !== 'string' || !reader.result.startsWith('data:image/')) {
-        setStorageNotice('That image could not be loaded');
+        setStorageNotice(copy.imageCouldNotLoad);
         return;
       }
       setAppState((current) => ({
         ...current,
         preferences: { ...current.preferences, backgroundImage: reader.result as string },
       }));
-      setStorageNotice('Background saved locally');
+      setStorageNotice(copy.backgroundSaved);
     });
-    reader.addEventListener('error', () => setStorageNotice('That image could not be loaded'));
+    reader.addEventListener('error', () => setStorageNotice(copy.imageCouldNotLoad));
     reader.readAsDataURL(file);
   };
 
   const clearBackground = () => {
     updatePreference('backgroundImage', null);
-    setStorageNotice('Custom background removed');
+    setStorageNotice(copy.backgroundRemoved);
   };
 
   const resetShortcuts = () => {
-    if (!window.confirm('Reset all shortcuts?')) return;
+    if (!window.confirm(copy.resetShortcutsConfirm)) return;
     setAppState((current) => ({ ...current, shortcuts: [] }));
     setOrbitOffset(0);
     setShowSettings(false);
@@ -287,7 +293,7 @@ export function App() {
     document.documentElement.style.setProperty('--lens-highlight-y', `${y}%`);
   };
 
-  const activeEngineLabel = SEARCH_ENGINE_LABELS[appState.preferences.searchEngine];
+  const activeEngineLabel = copy.searchEngineNames[appState.preferences.searchEngine];
   return (
     <main className={`app-shell glass-${appState.preferences.glassIntensity}`}>
       {appState.preferences.backgroundImage && (
@@ -302,7 +308,6 @@ export function App() {
       <div className="pointer-field" aria-hidden="true" />
 
       <header className="topbar">
-        <span className="product-mark">LIQUID</span>
         <button
           className="text-button"
           type="button"
@@ -310,16 +315,17 @@ export function App() {
             closeLens();
             setShowSettings(true);
           }}
-          aria-label="Open settings"
+          aria-label={copy.openSettings}
         >
           <MorphIcon icon={Settings} size={15} strokeWidth={1.8} reducedMotion="user" />
-          <span>Settings</span>
+          <span>{copy.settings}</span>
         </button>
       </header>
 
       <section className="scene" aria-label="Liquid New Tab">
         <div className="orbit-stage">
           <Orbit
+            copy={copy}
             shortcuts={appState.shortcuts}
             isEditing={isEditing}
             isSearching={mode === 'search' || mode === 'add'}
@@ -340,6 +346,7 @@ export function App() {
             addError={addError}
             searchEngine={appState.preferences.searchEngine}
             glassIntensity={appState.preferences.glassIntensity}
+            copy={copy}
             onOpenSearch={openSearch}
             onQueryChange={setQuery}
             onNavigate={navigate}
@@ -354,35 +361,38 @@ export function App() {
 
         {appState.shortcuts.length === 0 && mode === 'rest' && !isEditing && (
           <div className="empty-copy">
-            <p>Add your first shortcut</p>
-            <span>Click any plus to begin</span>
+            <p>{copy.emptyTitle}</p>
+            <span>{copy.emptyHint}</span>
           </div>
         )}
       </section>
 
       <div className="bottom-left-hint">
         <span className="hint-key">/</span>
-        <span>Search</span>
+        <span>{copy.search}</span>
       </div>
 
       <div className="bottom-right-controls">
         {isEditing ? (
           <button className="control-button control-primary" type="button" onClick={() => setIsEditing(false)}>
-            Done
+            {copy.done}
           </button>
         ) : (
           <button className="control-button" type="button" onClick={enterEdit}>
-            Edit shortcuts
+            {copy.editShortcuts}
           </button>
         )}
       </div>
 
       {showSettings && (
         <SettingsPanel
+          copy={copy}
           searchEngine={appState.preferences.searchEngine}
           glassIntensity={appState.preferences.glassIntensity}
+          language={appState.preferences.language}
           onSearchEngineChange={(value: SearchEngine) => updatePreference('searchEngine', value)}
           onGlassIntensityChange={(value: GlassIntensity) => updatePreference('glassIntensity', value)}
+          onLanguageChange={(value: Language) => updatePreference('language', value)}
           backgroundImage={appState.preferences.backgroundImage}
           onBackgroundChange={handleBackgroundChange}
           onBackgroundClear={clearBackground}
@@ -393,17 +403,16 @@ export function App() {
 
       {removedShortcut && (
         <GlassSurface className="undo-toast" variant="tooltip" intensity={appState.preferences.glassIntensity}>
-          <span>Removed {removedShortcut.shortcut.title}</span>
+          <span>{copy.removedShortcut(removedShortcut.shortcut.title)}</span>
           <button type="button" onClick={undoDelete}>
             <MorphIcon icon={Undo2} size={14} strokeWidth={1.8} reducedMotion="user" />
-            <span>Undo</span>
+            <span>{copy.undo}</span>
           </button>
         </GlassSurface>
       )}
 
       {storageNotice && <p className="storage-notice" role="status">{storageNotice}</p>}
-      <p className="privacy-note">Local first. No account, no tracking.</p>
-      <span className="sr-only">Default search engine: {activeEngineLabel}</span>
+      <span className="sr-only">{copy.defaultSearchEngine}: {activeEngineLabel}</span>
     </main>
   );
 }

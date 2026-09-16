@@ -9,6 +9,7 @@ The interface follows the PRD's three-state model:
 - Edit: shortcuts can be added, removed, dragged between slots, or reordered with the keyboard.
 
 All preferences and shortcuts are stored locally. The extension requests only the `storage` permission. Shortcut icons are requested directly from each website's own domain, with a local Morphicons fallback when a site does not expose a usable icon.
+The interface supports English and Chinese. It follows the browser language on first launch and lets you change the language in Settings.
 
 ## Local development
 

@@ -51,6 +51,9 @@ export const sanitizeState = (value: unknown): AppState => {
         preferences?.glassIntensity === 'low' || preferences?.glassIntensity === 'high'
           ? preferences.glassIntensity
           : 'normal',
+      language: preferences?.language === 'zh' || preferences?.language === 'en'
+        ? preferences.language
+        : fallback.preferences.language,
       backgroundImage:
         typeof preferences?.backgroundImage === 'string' &&
         preferences.backgroundImage.startsWith('data:image/') &&

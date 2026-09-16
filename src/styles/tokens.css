@@ -33,7 +33,7 @@
   --radius-small: 12px;
   --radius-medium: 18px;
   --radius-large: 24px;
-  --motion-fast: 120ms;
-  --motion-normal: 220ms;
-  --motion-morph: 320ms;
+  --motion-fast: 90ms;
+  --motion-normal: 160ms;
+  --motion-morph: 220ms;
 }
