@@ -46,7 +46,7 @@ The release also includes a `.crx` package. Chrome may block direct installation
 
 ## Local development
 
-Requirements: Node.js 18 or newer and Chrome.
+Requirements: Node.js 20.19 or newer on the 20.x line, or Node.js 22.12 or newer, plus Chrome.
 
 ```bash
 npm install
